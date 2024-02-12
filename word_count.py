@@ -17,11 +17,10 @@ import glob
 import fileinput
 
 def load_input(input_directory):
-    """carga los archivos y genera la lista de tuplas"""
-    filesnames = glob.glob(input_directory + "/*.*")
-
+    """Carga los archivos y genera la lista de tuplas"""
+    filenames = glob.glob(input_directory + "/*.*")
+ 
     sequence = []
-
     with fileinput.input(files=filenames) as f:
         for line in f:
             sequence.append(
@@ -30,7 +29,7 @@ def load_input(input_directory):
 
     return sequence
 
-print(load_input("input/")[10])
+
 
 
 #
@@ -49,9 +48,10 @@ print(load_input("input/")[10])
 def mapper(sequence):
 
     new_sequence = [
-        (word.lower 1) for _,  
-    ]
-
+        (word.lower().replace (".", "").replace(",",""),1) 
+        for _, line in sequence 
+        for word in line.split()]
+    return new_sequence
 
 #
 # Escriba la función shuffle_and_sort que recibe la lista de tuplas entregada
@@ -80,16 +80,15 @@ def shuffle_and_sort(sequence):
 # texto.
 #
 from itertools import groupby
-
 def reducer(sequence):
-    for k, g in groupby(sequence, lambda x: x[0])
-    key = k
-    values = sum(x[1] for x in g)
-    new_sequence.append(
-        (key, value)
-    )
-   
-   return new_sequence
+    new_sequence = []
+    for k, g in groupby(sequence, lambda x: x[0]):
+        key = k
+        values = sum(x[1] for x in g)
+        new_sequence.append(
+            (key, values)
+        )
+    return new_sequence
 
 
 #
@@ -127,20 +126,22 @@ def save_output(output_directory, sequence):
 # entregado como parámetro.
 #
 def create_marker(output_directory):
-    with open(os.path.join(output_directory, "part-00000"))
+    with open(os.path.join(output_directory, "_SUCCESS"), "w")as f:
+            f.write("")
 
-sequence = load_input("input/")
-sequence = mapper(sequence)
-sequence = shuffle_and_sort(sequence)
-sequence = reducer(sequence)
-create_ouptput_directory(output_directory)
-save_output(output_directory, sequence)
-create_marker(output_directory)
+
 #
 # Escriba la función job, la cual orquesta las funciones anteriores.
 #
 def job(input_directory, output_directory):
-    pass
+    sequence = load_input(input_directory)
+    sequence = mapper(sequence)
+    sequence = shuffle_and_sort(sequence)
+    sequence = reducer(sequence)
+    create_ouptput_directory(output_directory)
+    save_output(output_directory, sequence)
+    create_marker(output_directory)
+    #print(sequence)
 
 
 if __name__ == "__main__":
